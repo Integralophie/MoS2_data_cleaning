@@ -123,6 +123,8 @@ def reorder_by_VG(df_sorted, Vbg):
     sorted_df.columns = new_list
 
     df_new = sorted_df.reset_index().set_index(' VTG')
+    df_new['Itg, V_D = 0.1'] = abs(df_new['Itg, V_D = 0.1'])
+    df_new['Id, V_D = 0.1'] = abs(df_new['Id, V_D = 0.1'])
     df_new.drop(columns=[' forward', 'Itg, V_D = 0.4', 'Itg, V_D = 0.7', 'Itg, V_D = 1.0','Ibg, V_D = 0.4', 'Ibg, V_D = 0.7', 'Ibg, V_D = 1.0'],inplace=True)
     df_new[' Vbg'] = Vbg
 
