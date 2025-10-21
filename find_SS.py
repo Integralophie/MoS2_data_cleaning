@@ -45,3 +45,20 @@ def find_SS(Vtg, smoothed_Id):
 
 def find_gm(df,max_loc):
     pass
+
+
+
+def find_Vth(df):
+    Vtg = df.index.to_numpy()
+
+    Vbg_val = []
+    Vth_list = []
+    for col in df.columns.to_list():
+        Vbg_val.append(float(col[10:]))
+        current_col = df[col].to_list()
+        Id_idx = find_first_Id_above_threshold(current_col,1e-10)
+        Vth_list.append(float(Vtg[Id_idx]))
+
+    slope, intercept = np.polyfit(Vbg_val,Vth_list, 1)
+
+    return slope
