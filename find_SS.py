@@ -16,7 +16,7 @@ def filter_noise(df):
 
 def grab_V_I_0pt1(df):
     Vtg = df.index.to_numpy()
-    Id_sample = df['Id, V_D = 0.4'].to_numpy()
+    Id_sample = df['Id, V_D = 1.0'].to_numpy()
 
     sigma = 5 # Standard deviation of the Gaussian kernel
     smoothed_Id = gaussian_filter1d(Id_sample, sigma)
