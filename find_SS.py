@@ -11,14 +11,14 @@ import math
 
 
 def filter_noise(df):
-    filtered_df = df[df['Id, V_D = 1.0'] > 1e-13]
+    filtered_df = df[df['Id, V_D = 1.0'] > 1e-11]
     return filtered_df
 
 def grab_V_I_0pt1(df):
     Vtg = df.index.to_numpy()
     Id_sample = df['Id, V_D = 1.0'].to_numpy()
 
-    sigma = 5 # Standard deviation of the Gaussian kernel
+    sigma = 2 # Standard deviation of the Gaussian kernel
     smoothed_Id = gaussian_filter1d(Id_sample, sigma)
 
     return Vtg, smoothed_Id
@@ -36,12 +36,16 @@ def find_SS(Vtg, smoothed_Id):
     Id_idx_large = find_first_Id_above_threshold(smoothed_Id,1e-9)
     print(f'Vtg = {Vtg[Id_idx_large]}, Id = {smoothed_Id[Id_idx_large]}')
     SS = Vtg[Id_idx_large] - Vtg[Id_idx_small]
+    
+    dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
+    SS_grad = 1/max(dIdVg)
+    SS_grad_idx = np.nanargmax(dIdVg)
 
     # dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
     # max_index = np.nanargmax(dIdVg)
     # SS = 1/max(dIdVg)
 # 
-    return SS, Id_idx_large, Id_idx_small
+    return SS, Id_idx_large, Id_idx_small, SS_grad, SS_grad_idx
 
 def find_gm(df,max_loc):
     pass
