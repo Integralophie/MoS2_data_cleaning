@@ -11,7 +11,7 @@ import math
 
 
 def filter_noise(df):
-    filtered_df = df[df['Id, V_D = 1.0'] > 1e-11]
+    filtered_df = df[df['Id, V_D = 1.0'] > 5e-11]
     return filtered_df
 
 def grab_V_I_0pt1(df):
@@ -31,6 +31,10 @@ def find_first_Id_above_threshold(data_list, threshold):
 
 def find_SS(Vtg, smoothed_Id):
 
+    '''
+    needs edit
+    '''
+
     Id_idx_small = find_first_Id_above_threshold(smoothed_Id,1e-10)
     print(f'Vtg = {Vtg[Id_idx_small]}, Id = {smoothed_Id[Id_idx_small]}')
     Id_idx_large = find_first_Id_above_threshold(smoothed_Id,1e-9)
@@ -46,6 +50,14 @@ def find_SS(Vtg, smoothed_Id):
     # SS = 1/max(dIdVg)
 # 
     return SS, Id_idx_large, Id_idx_small, SS_grad, SS_grad_idx
+
+
+def find_SS_grad(Vtg, smoothed_Id):
+    dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
+    SS_grad = 1/max(dIdVg)
+    SS_grad_idx = np.nanargmax(dIdVg)
+    return SS_grad,smoothed_Id[SS_grad_idx],Vtg[SS_grad_idx],dIdVg[SS_grad_idx]
+
 
 def find_gm(df,max_loc):
     pass
