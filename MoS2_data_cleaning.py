@@ -271,3 +271,27 @@ def reorder_by_VG_double(df_sorted, Vbg):
 
     return df_abs
 
+
+
+'''
+IdVtg with 10mV, low smoothing, filtered with voltage instead of current
+
+
+'''
+
+def read_csv_IdVtg_10mV(filename):
+    df  = pd.read_csv(filename, skiprows=256)
+    df.drop(df.columns[0], axis=1, inplace=True)
+    Vbg = df.iloc[1, 2]
+    df.drop(columns=[' Vbg', ' IS'], inplace=True)
+
+    df[' forward'] = True
+
+    df.loc[(df.index >= 301) & (df.index <= 601), ' forward'] = False
+    df.loc[(df.index >= 903) & (df.index <= 1203), ' forward'] = False
+    df.loc[(df.index >= 1505) & (df.index <= 1805), ' forward'] = False
+    df.loc[(df.index >= 2107) & (df.index <= 2407), ' forward'] = False
+    return Vbg, df
+
+
+

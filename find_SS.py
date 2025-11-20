@@ -78,3 +78,36 @@ def find_Vth(df):
     slope, intercept = np.polyfit(Vbg_val,Vth_list, 1)
 
     return slope
+
+
+
+'''
+10mV
+
+'''
+
+
+def filter_noise_voltage(df):
+
+    filtered_df = df.iloc[140:462]
+
+    return filtered_df
+
+
+def find_SS_grad_4(filtered_df):
+    Id_0p1 = filtered_df['Id, V_D = 0.1'].to_numpy()
+    Id_0p4 = filtered_df['Id, V_D = 0.4'].to_numpy()
+    Id_0p7 = filtered_df['Id, V_D = 0.7'].to_numpy()
+    Id_1p0 = filtered_df['Id, V_D = 1.0'].to_numpy()
+    Vtg = filtered_df.index.to_numpy()
+    sigma = 0.1 # Standard deviation of the Gaussian kernel
+    SS_4 = []
+    for Id in [Id_0p1,Id_0p4,Id_0p7,Id_1p0]:
+        smoothed_Id = gaussian_filter1d(Id, sigma)
+        dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
+        max_index = np.nanargmax(dIdVg)
+        SS = 1/max(dIdVg)
+        Vtg_ss = Vtg[np.nanargmax(dIdVg)]
+        SS_4.append(float(SS))
+
+    return SS_4, Vtg_ss
