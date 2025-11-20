@@ -100,11 +100,22 @@ def find_SS_grad_4(filtered_df):
     Id_0p7 = filtered_df['Id, V_D = 0.7'].to_numpy()
     Id_1p0 = filtered_df['Id, V_D = 1.0'].to_numpy()
     Vtg = filtered_df.index.to_numpy()
-    sigma = 0.5 # Standard deviation of the Gaussian kernel
+
+
+    
+    sigma = 0.1 # Standard deviation of the Gaussian kernel
     SS_4 = []
     for Id in [Id_0p1,Id_0p4,Id_0p7,Id_1p0]:
         smoothed_Id = gaussian_filter1d(Id, sigma)
         dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
+
+        ddIdVg = np.gradient(dIdVg,Vtg)
+        # Enumerate through the array
+        for index, value in enumerate(ddIdVg):
+            if abs(value) >= 50:
+                dIdVg[index] = 0
+
+
         max_index = np.nanargmax(dIdVg)
         SS = 1/max(dIdVg)
         Vtg_ss = Vtg[np.nanargmax(dIdVg)]
