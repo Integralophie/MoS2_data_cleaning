@@ -108,16 +108,18 @@ def find_SS_grad_4(filtered_df):
     for Id in [Id_0p1,Id_0p4,Id_0p7,Id_1p0]:
         smoothed_Id = gaussian_filter1d(Id, sigma)
         dIdVg = np.gradient(np.log10(smoothed_Id),Vtg)
+        smoothed_dIdVg = gaussian_filter1d(dIdVg, 3)
+
 
         ddIdVg = np.gradient(dIdVg,Vtg)
         # Enumerate through the array
         for index, value in enumerate(ddIdVg):
-            if abs(value) >= 50:
+            if abs(value) >= 100:
                 dIdVg[index] = 0
 
 
-        max_index = np.nanargmax(dIdVg)
-        SS = 1/max(dIdVg)
+        max_index = np.nanargmax(smoothed_dIdVg)
+        SS = 1/dIdVg[max_index]
         Vtg_ss = Vtg[np.nanargmax(dIdVg)]
         SS_4.append(float(SS))
 
