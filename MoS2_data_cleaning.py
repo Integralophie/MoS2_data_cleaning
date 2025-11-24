@@ -233,10 +233,6 @@ def reshape_table_by_VD_double(df):
     return df_sorted
 
 
-
-
-
-
 def reorder_by_VG_double(df_sorted, Vbg):
     midpoint = len(df_sorted) // 2
 
@@ -293,5 +289,5 @@ def read_csv_IdVtg_10mV(filename):
     df.loc[(df.index >= 2107) & (df.index <= 2407), ' forward'] = False
     return Vbg, df
 
-
+s
 
